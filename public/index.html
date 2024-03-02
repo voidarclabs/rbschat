@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <form id="loginform" onsubmit="return false">
+        <div id="loginformcontent">
+          <img id="namelogo" src="koot.png" alt="koot(tm) official logo frfr">
+         <input type="text" name="" id="name">
+         <button id="namebutton" onclick="submitName()">Enter game</button>
+        </div>
+      </form>
+    <div id="chatslideout" class="closed">
+        <div id="chatcolor">
+        <iframe src="./chat.html" frameborder="0" id="chatwindow"></iframe>
+        <form onsubmit="return false">
+          <input type="text" id="msgbox">
+          <button id="msgboxbutton" onclick="sendMessage(document.getElementById('msgbox').value)">send</button>
+        </form>
+      </div>
+      <script>
+        var clientname = 'user'
+        const socket = io()
+
+        socket.on('chatmessage', (data) => {
+            console.log(data)
+            document.getElementById('chat').innerHTML += data +  `<br>`;
+            window.scrollTo(0, document.body.scrollHeight);
+        })
+        window.onload = function() {
+            document.getElementById('chat').innerHTML = '';
+        }
+        function submitName() {
+            var data = document.getElementById('name').value
+            if (data == '') {
+            console.log('name empty, try again')
+            } else {
+            if (data == 'admin1237') {
+            admin('quiz')
+            }
+            console.log(data)
+            socket.emit('namecall', data)
+            clientname = data
+            console.log('submitted')
+
+            return clientname
+        }}
+        function sendMessage(message) {
+            if (clientname == '') {
+            } else {
+                if (message == '') {} else {
+                document.getElementById('msgbox').value = "";
+                socket.emit('message', { id: clientname, message: message });
+                console.log(`Sent message: ${message} with name ${clientname}`)
+            }}
+
+            }
+    </script>
+</body>
+</html>
